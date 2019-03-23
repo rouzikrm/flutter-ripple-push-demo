@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RippleNotificationCard()
+            RippleNotificationCard(color:Colors.amber,containerWidth:100.0, containerHeight:100.0,cardBody:<Widget>[Text('Hello')],ripplePower: 3.0)
           ],
         ),
       ),

@@ -2,31 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:sms/sms.dart';
 import 'dart:async';
 class RippleNotificationCard extends StatefulWidget {
+  RippleNotificationCard( {Color color, double containerWidth, double containerHeight, List<Widget> cardBody,double ripplePower}):
+   this.color=color,this.containerWidth=containerWidth,this.containerHeight=containerHeight,this.cardBody=cardBody,this.ripplePower=ripplePower;
+  Color color;
+  double containerWidth;
+  double containerHeight;
+  double ripplePower;
+  List<Widget> cardBody;
   @override
-  State<StatefulWidget> createState() => _RippleNotificationCardState();
+  State<StatefulWidget> createState() => _RippleNotificationCardState(stateColor:color,stateContainerWidth:containerWidth,stateContainerHeight:containerHeight,stateCardBody:cardBody,stateRipplePower: ripplePower);
 
 }
 
 
 
 class _RippleNotificationCardState extends State<RippleNotificationCard> with TickerProviderStateMixin {
+  _RippleNotificationCardState( {Color stateColor, double stateContainerWidth,  double stateContainerHeight, List<Widget>stateCardBody,double stateRipplePower}):
+    this.stateColor =stateColor,this.stateContainerHeight =stateContainerHeight, this.stateContainerWidth=stateContainerWidth,this.stateCardBody=stateCardBody,this.stateRipplePower=stateRipplePower;
+    
   AnimationController _controller;
+  Color stateColor;
+  double stateContainerWidth;
+  double stateContainerHeight;
+  double stateRipplePower;
+  List<Widget> stateCardBody;
   @override
   Widget build(BuildContext context) {
     
     Card card =  Card(child:
-    Stack(children: <Widget>[ Center(child:   Dot(radiusMax: 150.0,radiusMin: 0.0,dotController: _controller.view,color: Colors.red,)) ,
-    Center(child:
-      Column( mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center ,
-        mainAxisSize: MainAxisSize.min,children: <Widget>[ 
-          Text("Hello"),
-          ]
+    Stack(children: <Widget>[ 
+      Center(child:   Dot(radiusMax: stateContainerWidth*stateRipplePower,radiusMin: 0.0,dotController: _controller.view,color: stateColor,)) ,
+      Center(child:
+        Column( mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center ,
+          mainAxisSize: MainAxisSize.min,children: stateCardBody
        )
        )
     ] 
     )
     );
-    return Container(width: 100.0,height: 100.0,  child: InkWell(onTap:(){ _playAnimation();} ,child: card));
+    return Container(width: stateContainerWidth,height: stateContainerHeight,  child: InkWell(onTap:(){ _playAnimation();} ,child: card));
     
   }
 
@@ -88,4 +102,4 @@ class Dot extends StatelessWidget {
   final Animation<double> scaleAnimation;
   final Animation<double> fadeAnimation;
 
-}
+} 

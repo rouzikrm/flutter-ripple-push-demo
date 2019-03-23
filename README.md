@@ -1,10 +1,14 @@
 # simple_ripple_animation
 
-A new Flutter project.
+A Demo to play with Flutter Animation Capabilities
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project creates a ripple effect using flutter animation capabilties which could be invoked not only by inkwell but also by listening to SMS.
+
+```
+Example: RippleNotificationCard(color:Colors.amber,containerWidth:100.0, containerHeight:100.0,cardBody:<Widget>[Text('Hello')],ripplePower: 3.0)
+```
 
 A few resources to get you started if this is your first Flutter project:
 
