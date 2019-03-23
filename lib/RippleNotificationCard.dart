@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sms/sms.dart';
 import 'dart:async';
+import 'dart:convert';
 class RippleNotificationCard extends StatefulWidget {
   RippleNotificationCard( {Color color, double containerWidth, double containerHeight, List<Widget> cardBody,double ripplePower}):
    this.color=color,this.containerWidth=containerWidth,this.containerHeight=containerHeight,this.cardBody=cardBody,this.ripplePower=ripplePower;
@@ -29,6 +30,8 @@ class _RippleNotificationCardState extends State<RippleNotificationCard> with Ti
   @override
   Widget build(BuildContext context) {
     
+    
+    _controller = AnimationController( duration: const Duration(seconds: 1), vsync: this,);
     Stack stackedView = Stack(children: <Widget>[ 
       Center(child:   Dot(radiusMax: stateContainerWidth*stateRipplePower,radiusMin: 0.0,dotController: _controller.view,color: stateColor,)) ,
       Center(child:
@@ -46,9 +49,17 @@ class _RippleNotificationCardState extends State<RippleNotificationCard> with Ti
   void initState(){
     super.initState();
     SmsReceiver receiver = new SmsReceiver();
-    receiver.onSmsReceived.listen((SmsMessage msg)=> _playAnimation() );
-    _controller = AnimationController( duration: const Duration(seconds: 1), vsync: this,);
-    
+    receiver.onSmsReceived.listen((SmsMessage msg){
+        Map commandDetails = json.decode(msg.body);
+        
+        setState((){
+           stateColor =Color(int.parse(commandDetails["color"], radix: 16));
+           Future.delayed(const Duration(milliseconds: 500),(){_playAnimation();});   
+        });
+        
+        
+      } 
+    );
   }
 
   @override
@@ -69,10 +80,11 @@ class _RippleNotificationCardState extends State<RippleNotificationCard> with Ti
 }
 
 class Dot extends StatelessWidget {
+  
 
-  final double radiusMin;
-  final double radiusMax;
-  final Color color;
+  double radiusMin;
+  double radiusMax;
+  Color color;
 
   Dot({Key key,this.radiusMin,this.radiusMax,this.color,this.dotController})
     :fadeAnimation = new Tween(begin:1.0,end:0.0,).animate(dotController),
@@ -85,6 +97,7 @@ class Dot extends StatelessWidget {
   Widget build(BuildContext context) {
     return new AnimatedBuilder(builder: _buildAnimation,animation: dotController,);
   }
+
 
   Widget _buildAnimation(BuildContext context, Widget child) {
     return  Container( child: 
@@ -100,4 +113,6 @@ class Dot extends StatelessWidget {
   final Animation<double> scaleAnimation;
   final Animation<double> fadeAnimation;
 
-} 
+
+}
+
