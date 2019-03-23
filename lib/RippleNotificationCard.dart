@@ -4,11 +4,11 @@ import 'dart:async';
 class RippleNotificationCard extends StatefulWidget {
   RippleNotificationCard( {Color color, double containerWidth, double containerHeight, List<Widget> cardBody,double ripplePower}):
    this.color=color,this.containerWidth=containerWidth,this.containerHeight=containerHeight,this.cardBody=cardBody,this.ripplePower=ripplePower;
-  Color color;
-  double containerWidth;
-  double containerHeight;
-  double ripplePower;
-  List<Widget> cardBody;
+  final Color color;
+  final double containerWidth;
+  final double containerHeight;
+  final double ripplePower;
+  final List<Widget> cardBody;
   @override
   State<StatefulWidget> createState() => _RippleNotificationCardState(stateColor:color,stateContainerWidth:containerWidth,stateContainerHeight:containerHeight,stateCardBody:cardBody,stateRipplePower: ripplePower);
 
@@ -62,7 +62,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard> with Ti
   Future<void> _playAnimation() async {
     try {
       await _controller.forward().orCancel;
-      await _controller.reset();
+      _controller.reset();
     } on TickerCanceled {
       // the animation got canceled, probably because we were disposed
     }
