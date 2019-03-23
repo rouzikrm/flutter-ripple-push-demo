@@ -83,9 +83,10 @@ class _MyHomePageState extends State<MyHomePage> {
               RippleNotificationCard(
                 color:Colors.amber,containerWidth:100.0, containerHeight:100.0,
                 cardBody:<Widget>[
+                  // RippleNotificationCard(color:Colors.redAccent,containerWidth:100.0, containerHeight:100.0,cardBody:<Widget>[Spacer()],ripplePower: 3.0)
                   Spacer()
                 ],
-                ripplePower: 3.0)
+                ripplePower: 3.0,eventType: "o",)
             )
           ],
         ),

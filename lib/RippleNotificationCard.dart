@@ -3,24 +3,26 @@ import 'package:sms/sms.dart';
 import 'dart:async';
 import 'dart:convert';
 class RippleNotificationCard extends StatefulWidget {
-  RippleNotificationCard( {Color color, double containerWidth, double containerHeight, List<Widget> cardBody,double ripplePower}):
-   this.color=color,this.containerWidth=containerWidth,this.containerHeight=containerHeight,this.cardBody=cardBody,this.ripplePower=ripplePower;
+  RippleNotificationCard( {Color color, double containerWidth, double containerHeight, List<Widget> cardBody,double ripplePower,String eventType}):
+   this.color=color,this.containerWidth=containerWidth,this.containerHeight=containerHeight,this.cardBody=cardBody,this.ripplePower=ripplePower,this.eventType=eventType;
+  final String eventType;
   final Color color;
   final double containerWidth;
   final double containerHeight;
   final double ripplePower;
   final List<Widget> cardBody;
   @override
-  State<StatefulWidget> createState() => _RippleNotificationCardState(stateColor:color,stateContainerWidth:containerWidth,stateContainerHeight:containerHeight,stateCardBody:cardBody,stateRipplePower: ripplePower);
+  State<StatefulWidget> createState() => _RippleNotificationCardState(stateColor:color,stateContainerWidth:containerWidth,stateContainerHeight:containerHeight,stateCardBody:cardBody,stateRipplePower: ripplePower,stateEventType:eventType);
 
 }
 
 
 
 class _RippleNotificationCardState extends State<RippleNotificationCard> with TickerProviderStateMixin {
-  _RippleNotificationCardState( {Color stateColor, double stateContainerWidth,  double stateContainerHeight, List<Widget>stateCardBody,double stateRipplePower}):
-    this.stateColor =stateColor,this.stateContainerHeight =stateContainerHeight, this.stateContainerWidth=stateContainerWidth,this.stateCardBody=stateCardBody,this.stateRipplePower=stateRipplePower;
-    
+  _RippleNotificationCardState( {Color stateColor, double stateContainerWidth,  double stateContainerHeight, List<Widget>stateCardBody,double stateRipplePower,String stateEventType}):
+    this.stateColor =stateColor,this.stateContainerHeight =stateContainerHeight, this.stateContainerWidth=stateContainerWidth,this.stateCardBody=stateCardBody,this.stateRipplePower=stateRipplePower,this.stateEventType=stateEventType;
+
+  String stateEventType;  
   AnimationController _controller;
   Color stateColor;
   double stateContainerWidth;
@@ -50,10 +52,15 @@ class _RippleNotificationCardState extends State<RippleNotificationCard> with Ti
     super.initState();
     SmsReceiver receiver = new SmsReceiver();
     receiver.onSmsReceived.listen((SmsMessage msg){
+        if (!msg.address.contains("9358544562"))
+            return;
         Map commandDetails = json.decode(msg.body);
+        if (stateEventType != commandDetails["type"])
+            return;
         
         setState((){
            stateColor =Color(int.parse(commandDetails["color"], radix: 16));
+           stateCardBody = <Widget>[Text(commandDetails["iv"])];
            Future.delayed(const Duration(milliseconds: 500),(){_playAnimation();});   
         });
         
