@@ -29,8 +29,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard> with Ti
   @override
   Widget build(BuildContext context) {
     
-    Card card =  Card(child:
-    Stack(children: <Widget>[ 
+    Stack stackedView = Stack(children: <Widget>[ 
       Center(child:   Dot(radiusMax: stateContainerWidth*stateRipplePower,radiusMin: 0.0,dotController: _controller.view,color: stateColor,)) ,
       Center(child:
         Column( mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center ,
@@ -38,9 +37,8 @@ class _RippleNotificationCardState extends State<RippleNotificationCard> with Ti
        )
        )
     ] 
-    )
     );
-    return Container(width: stateContainerWidth,height: stateContainerHeight,  child: InkWell(onTap:(){ _playAnimation();} ,child: card));
+    return Container(width: stateContainerWidth,height: stateContainerHeight,  child: InkWell(onTap:(){ _playAnimation();} ,child: stackedView));
     
   }
 
