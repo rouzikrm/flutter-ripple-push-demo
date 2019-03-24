@@ -90,8 +90,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 _buildBox(points: 1,eventType:"ba", color: Colors.indigo),
                 _buildBox(points: 1,eventType:"bb", color: Colors.indigo),
                 _buildBox(points: 1,eventType:"bc", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"bd", color: Colors.indigo),
                 _buildBox(points: 1,eventType:"be", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"bf", color: Colors.indigo),
                 
               ],
             ),
@@ -102,9 +102,9 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 _buildBox(points: 1,eventType:"ca", color: Colors.indigo),
                 _buildBox(points: 1,eventType:"cb", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"cc", color: Colors.indigo),
                 _buildBox(points: 1,eventType:"cd", color: Colors.indigo),
                 _buildBox(points: 1,eventType:"ce", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"cf", color: Colors.indigo),
                 
               ],
             ),
@@ -117,7 +117,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 _buildBox(points: 1,eventType:"db", color: Colors.indigo),
                 _buildBox(points: 1,eventType:"dc", color: Colors.indigo),
                 _buildBox(points: 1,eventType:"dd", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"df", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"de", color: Colors.indigo),
+                
+              ],
+            ),
+          ),
+                    Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                _buildBox(points: 1,eventType:"ea", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"eb", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ec", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ed", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ee", color: Colors.indigo),
                 
               ],
             ),
@@ -137,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Center( child:
           Card(child:
               RippleNotificationCard(
-                topic:eventType,color:color,containerWidth:points * 100.0, containerHeight:100.0,
+                sticky:true,topic:eventType,color:color,containerWidth:points * 100.0, containerHeight:100.0,
                 cardBody:<Widget>[
                   Spacer()
                 ],

@@ -6,20 +6,23 @@ import 'package:mqtt_client/mqtt_client.dart';
 
 class RippleNotificationCard extends StatefulWidget {
   RippleNotificationCard(
-      { String topic,
-        Color color,
+      {bool sticky,
+      String topic,
+      Color color,
       double containerWidth,
       double containerHeight,
       List<Widget> cardBody,
       double ripplePower,
       String eventType})
-      : this.topic =topic,
+      : this.sticky = sticky,
+        this.topic = topic,
         this.color = color,
         this.containerWidth = containerWidth,
         this.containerHeight = containerHeight,
         this.cardBody = cardBody,
         this.ripplePower = ripplePower,
         this.eventType = eventType;
+  final bool sticky;
   final String eventType;
   final String topic;
   final Color color;
@@ -29,6 +32,7 @@ class RippleNotificationCard extends StatefulWidget {
   final List<Widget> cardBody;
   @override
   State<StatefulWidget> createState() => _RippleNotificationCardState(
+      stateSticky: sticky,
       stateTopic: topic,
       stateColor: color,
       stateContainerWidth: containerWidth,
@@ -41,7 +45,7 @@ class RippleNotificationCard extends StatefulWidget {
 class _RippleNotificationCardState extends State<RippleNotificationCard>
     with TickerProviderStateMixin {
   _RippleNotificationCardState(
-      {
+      {bool stateSticky,
       String stateTopic,
       Color stateColor,
       double stateContainerWidth,
@@ -50,6 +54,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
       double stateRipplePower,
       String stateEventType})
       : client = MqttClient('192.168.1.2', ''),
+        this.stateSticky = stateSticky,
         this.stateTopic = stateTopic,
         this.stateColor = stateColor,
         this.stateContainerHeight = stateContainerHeight,
@@ -58,6 +63,8 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
         this.stateRipplePower = stateRipplePower,
         this.stateEventType = stateEventType;
 
+  Color prevStateColor;
+  bool stateSticky;
   String stateTopic;
   String stateEventType;
   AnimationController _controller;
@@ -79,6 +86,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
         radiusMin: 0.0,
         dotController: _controller.view,
         color: stateColor,
+        prev:prevStateColor
       )),
       Center(
           child: Column(
@@ -93,7 +101,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
         constraints: BoxConstraints.expand(),
         child: InkWell(
             onTap: () {
-              _playAnimation();
+              //_playAnimation("");
             },
             child: stackedView));
   }
@@ -101,24 +109,23 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
   @override
   void initState() {
     super.initState();
-    connect(); 
+    connect();
     SmsReceiver receiver = new SmsReceiver();
-    receiver.onSmsReceived.listen((SmsMessage msg){
-        if (!msg.address.contains("9358544562"))
-            return;
-        Map commandDetails = json.decode(msg.body);
-        if (stateEventType != commandDetails["type"])
-            return;
-        
-        setState((){
-           stateColor =Color(int.parse(commandDetails["color"], radix: 16));
-           stateCardBody = <Widget>[Text(commandDetails["iv"])];
-           Future.delayed(const Duration(milliseconds: 500),(){_playAnimation();});   
+    receiver.onSmsReceived.listen((SmsMessage msg) {
+      if (!msg.address.contains("9358544562")) return;
+      Map commandDetails = json.decode(msg.body);
+      if (stateEventType != commandDetails["type"]) return;
+
+      setState(() {
+        prevStateColor = stateColor;
+        stateColor = Color(int.parse(commandDetails["color"], radix: 16));
+        stateCardBody = <Widget>[Text(commandDetails["iv"])];
+        Future.delayed(const Duration(milliseconds: 500), () {
+          _playAnimation(commandDetails["iv"]);
+          //if (stateSticky) stateColor.withAlpha(255);
         });
-        
-        
-      } 
-    );
+      });
+    });
   }
 
   @override
@@ -127,13 +134,20 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
     super.dispose();
   }
 
-  Future<void> _playAnimation() async {
-    try {
-      await _controller.forward().orCancel;
-      _controller.reset();
-    } on TickerCanceled {
-      // the animation got canceled, probably because we were disposed
-    }
+  Future<void> _playAnimation(String value) async {
+  
+       if (int.parse(value)>=100){
+         await _controller.forward();
+      } else {
+         await _controller.reverse(from:500.0);
+        
+      }
+      if (!stateSticky) 
+        _controller.reset();
+     
+       
+      
+    
   }
 
   final MqttClient client;
@@ -207,7 +221,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
       /// Use status here rather than state if you also want the broker return code.
       print(
           'EXAMPLE::ERROR Mosquitto client connection failed - disconnecting, status is ${client.connectionStatus}');
-          
+
       client.disconnect();
     }
 
@@ -230,16 +244,17 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
       /// The payload is a byte buffer, this will be specific to the topic
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
-          
-        Map commandDetails = json.decode(pt); 
-        if (stateEventType != commandDetails["type"])
-            return;
-        
-        setState((){
-           stateColor =Color(int.parse(commandDetails["color"], radix: 16));
-           stateCardBody = <Widget>[Text(commandDetails["iv"])];
-           Future.delayed(const Duration(milliseconds: 500),(){_playAnimation();});   
+
+      Map commandDetails = json.decode(pt);
+      if (stateEventType != commandDetails["type"]) return;
+
+      setState(() {
+        stateColor = Color(int.parse(commandDetails["color"], radix: 16));
+        stateCardBody = <Widget>[Text(commandDetails["iv"])];
+        Future.delayed(const Duration(milliseconds: 500), () {
+          _playAnimation(commandDetails["iv"]);
         });
+      });
       print('');
     });
 
@@ -316,11 +331,12 @@ class Dot extends StatelessWidget {
   double radiusMin;
   double radiusMax;
   Color color;
+  Color prev;
 
-  Dot({Key key, this.radiusMin, this.radiusMax, this.color, this.dotController})
+  Dot({Key key, this.radiusMin, this.radiusMax, this.color, this.dotController,this.prev})
       : fadeAnimation = new Tween(
-          begin: 1.0,
-          end: 0.0,
+          begin: 0.0,
+          end: 1.0,
         ).animate(dotController),
         borderRadious = new BorderRadiusTween(
                 begin: BorderRadius.circular(30.0),
@@ -341,7 +357,7 @@ class Dot extends StatelessWidget {
   }
 
   Widget _buildAnimation(BuildContext context, Widget child) {
-    return Container(
+    return InkWell(child:Container(
         child: Opacity(
             opacity: fadeAnimation.value,
             child: Container(
@@ -349,7 +365,7 @@ class Dot extends StatelessWidget {
               height: this.scaleAnimation.value,
               decoration: BoxDecoration(
                   color: this.color, borderRadius: borderRadious.value),
-            )));
+            ))));
   }
 
   final Animation<BorderRadius> borderRadious;
