@@ -74,11 +74,11 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 2,
             child: Row(
               children: [
-                _buildBox(points: 1,eventType:"aa", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"ab", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"ac", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"ad", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"ae", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"aa", color: Colors.white),
+                _buildBox(points: 1,eventType:"ab", color: Colors.white),
+                _buildBox(points: 1,eventType:"ac", color: Colors.white),
+                _buildBox(points: 1,eventType:"ad", color: Colors.white),
+                _buildBox(points: 1,eventType:"ae", color: Colors.white),
                 
               ],
             ),
@@ -87,11 +87,11 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 2,
             child: Row(
               children: [
-                _buildBox(points: 1,eventType:"ba", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"bb", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"bc", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"bd", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"be", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ba", color: Colors.white),
+                _buildBox(points: 1,eventType:"bb", color: Colors.white),
+                _buildBox(points: 1,eventType:"bc", color: Colors.white),
+                _buildBox(points: 1,eventType:"bd", color: Colors.white),
+                _buildBox(points: 1,eventType:"be", color: Colors.white),
                 
               ],
             ),
@@ -100,11 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 2,
             child: Row(
               children: [
-                _buildBox(points: 1,eventType:"ca", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"cb", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"cc", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"cd", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"ce", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ca", color: Colors.white),
+                _buildBox(points: 1,eventType:"cb", color: Colors.white),
+                _buildBox(points: 1,eventType:"cc", color: Colors.white),
+                _buildBox(points: 1,eventType:"cd", color: Colors.white),
+                _buildBox(points: 1,eventType:"ce", color: Colors.white),
                 
               ],
             ),
@@ -113,11 +113,11 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 2,
             child: Row(
               children: [
-                _buildBox(points: 1,eventType:"da", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"db", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"dc", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"dd", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"de", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"da", color: Colors.white),
+                _buildBox(points: 1,eventType:"db", color: Colors.white),
+                _buildBox(points: 1,eventType:"dc", color: Colors.white),
+                _buildBox(points: 1,eventType:"dd", color: Colors.white),
+                _buildBox(points: 1,eventType:"de", color: Colors.white),
                 
               ],
             ),
@@ -126,11 +126,11 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 2,
             child: Row(
               children: [
-                _buildBox(points: 1,eventType:"ea", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"eb", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"ec", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"ed", color: Colors.indigo),
-                _buildBox(points: 1,eventType:"ee", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ea", color: Colors.white),
+                _buildBox(points: 1,eventType:"eb", color: Colors.white),
+                _buildBox(points: 1,eventType:"ec", color: Colors.white),
+                _buildBox(points: 1,eventType:"ed", color: Colors.white),
+                _buildBox(points: 1,eventType:"ee", color: Colors.white),
                 
               ],
             ),
@@ -146,9 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
       flex: points,
       child: Container(
         constraints: BoxConstraints.expand(),
-        //color: color,
+
         child: Center( child:
-          Card(child:
               RippleNotificationCard(
                 sticky:true,topic:eventType,color:color,containerWidth:points * 100.0, containerHeight:100.0,
                 cardBody:<Widget>[
@@ -158,7 +157,6 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ,
         ),
-      ),
     );
   }
 

@@ -69,6 +69,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
   String stateEventType;
   AnimationController _controller;
   Color stateColor;
+  Color cardStateColor = Colors.white;
   double stateContainerWidth;
   double stateContainerHeight;
   double stateRipplePower;
@@ -82,12 +83,11 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
     Stack stackedView = Stack(children: <Widget>[
       Center(
           child: Dot(
-        radiusMax: stateContainerWidth * stateRipplePower,
-        radiusMin: 0.0,
-        dotController: _controller.view,
-        color: stateColor,
-        prev:prevStateColor
-      )),
+              radiusMax: stateContainerWidth * stateRipplePower,
+              radiusMin: 0.0,
+              dotController: _controller.view,
+              color: stateColor,
+              prev: prevStateColor)),
       Center(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -95,15 +95,17 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
               mainAxisSize: MainAxisSize.min,
               children: stateCardBody))
     ]);
-    return Container(
-        //width: stateContainerWidth,
-        //height: stateContainerHeight,
-        constraints: BoxConstraints.expand(),
-        child: InkWell(
-            onTap: () {
-              //_playAnimation("");
-            },
-            child: stackedView));
+    return Card(
+        color: cardStateColor,
+        child: Container(
+            //width: stateContainerWidth,
+            //height: stateContainerHeight,
+            constraints: BoxConstraints.expand(),
+            child: InkWell(
+                onTap: () {
+                  //_playAnimation("");
+                },
+                child: stackedView)));
   }
 
   @override
@@ -117,15 +119,18 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
       if (stateEventType != commandDetails["type"]) return;
 
       setState(() {
-        prevStateColor = stateColor;
-        stateColor = Color(int.parse(commandDetails["color"], radix: 16));
+        //prevStateColor = stateColor;
+        
+          stateColor = Color(int.parse(commandDetails["color"], radix: 16));
+        
         stateCardBody = <Widget>[Text(commandDetails["iv"])];
         Future.delayed(const Duration(milliseconds: 500), () {
+           cardStateColor = stateColor;
           _playAnimation(commandDetails["iv"]);
-          //if (stateSticky) stateColor.withAlpha(255);
         });
       });
     });
+    
   }
 
   @override
@@ -135,19 +140,12 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
   }
 
   Future<void> _playAnimation(String value) async {
-  
-       if (int.parse(value)>=100){
-         await _controller.forward();
-      } else {
-         await _controller.reverse(from:500.0);
-        
-      }
-      if (!stateSticky) 
-        _controller.reset();
-     
-       
-      
-    
+    await _controller.forward();
+    await _controller.reverse();
+    _controller.reset();
+    if (stateSticky)
+    cardStateColor = stateColor;
+    //await _controller.reverse(from: 500.0);
   }
 
   final MqttClient client;
@@ -250,6 +248,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
 
       setState(() {
         stateColor = Color(int.parse(commandDetails["color"], radix: 16));
+
         stateCardBody = <Widget>[Text(commandDetails["iv"])];
         Future.delayed(const Duration(milliseconds: 500), () {
           _playAnimation(commandDetails["iv"]);
@@ -333,7 +332,13 @@ class Dot extends StatelessWidget {
   Color color;
   Color prev;
 
-  Dot({Key key, this.radiusMin, this.radiusMax, this.color, this.dotController,this.prev})
+  Dot(
+      {Key key,
+      this.radiusMin,
+      this.radiusMax,
+      this.color,
+      this.dotController,
+      this.prev})
       : fadeAnimation = new Tween(
           begin: 0.0,
           end: 1.0,
@@ -357,7 +362,7 @@ class Dot extends StatelessWidget {
   }
 
   Widget _buildAnimation(BuildContext context, Widget child) {
-    return InkWell(child:Container(
+    return Container(
         child: Opacity(
             opacity: fadeAnimation.value,
             child: Container(
@@ -365,7 +370,7 @@ class Dot extends StatelessWidget {
               height: this.scaleAnimation.value,
               decoration: BoxDecoration(
                   color: this.color, borderRadius: borderRadious.value),
-            ))));
+            )));
   }
 
   final Animation<BorderRadius> borderRadious;
