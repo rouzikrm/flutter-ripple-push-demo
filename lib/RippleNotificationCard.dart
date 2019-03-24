@@ -6,19 +6,22 @@ import 'package:mqtt_client/mqtt_client.dart';
 
 class RippleNotificationCard extends StatefulWidget {
   RippleNotificationCard(
-      {Color color,
+      { String topic,
+        Color color,
       double containerWidth,
       double containerHeight,
       List<Widget> cardBody,
       double ripplePower,
       String eventType})
-      : this.color = color,
+      : this.topic =topic,
+        this.color = color,
         this.containerWidth = containerWidth,
         this.containerHeight = containerHeight,
         this.cardBody = cardBody,
         this.ripplePower = ripplePower,
         this.eventType = eventType;
   final String eventType;
+  final String topic;
   final Color color;
   final double containerWidth;
   final double containerHeight;
@@ -26,6 +29,7 @@ class RippleNotificationCard extends StatefulWidget {
   final List<Widget> cardBody;
   @override
   State<StatefulWidget> createState() => _RippleNotificationCardState(
+      stateTopic: topic,
       stateColor: color,
       stateContainerWidth: containerWidth,
       stateContainerHeight: containerHeight,
@@ -37,13 +41,16 @@ class RippleNotificationCard extends StatefulWidget {
 class _RippleNotificationCardState extends State<RippleNotificationCard>
     with TickerProviderStateMixin {
   _RippleNotificationCardState(
-      {Color stateColor,
+      {
+      String stateTopic,
+      Color stateColor,
       double stateContainerWidth,
       double stateContainerHeight,
       List<Widget> stateCardBody,
       double stateRipplePower,
       String stateEventType})
       : client = MqttClient('192.168.1.2', ''),
+        this.stateTopic = stateTopic,
         this.stateColor = stateColor,
         this.stateContainerHeight = stateContainerHeight,
         this.stateContainerWidth = stateContainerWidth,
@@ -51,6 +58,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
         this.stateRipplePower = stateRipplePower,
         this.stateEventType = stateEventType;
 
+  String stateTopic;
   String stateEventType;
   AnimationController _controller;
   Color stateColor;
@@ -80,8 +88,9 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
               children: stateCardBody))
     ]);
     return Container(
-        width: stateContainerWidth,
-        height: stateContainerHeight,
+        //width: stateContainerWidth,
+        //height: stateContainerHeight,
+        constraints: BoxConstraints.expand(),
         child: InkWell(
             onTap: () {
               _playAnimation();
@@ -171,7 +180,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
     /// client identifier, any supplied username/password, the default keepalive interval(60s)
     /// and clean session, an example of a specific one below.
     final MqttConnectMessage connMess = MqttConnectMessage()
-        .withClientIdentifier('Shaboore')
+        .withClientIdentifier('Shaboore${stateTopic}')
         .keepAliveFor(
             3600) // Must agree with the keep alive set above or not set
         //.withWillTopic('willtopic') // If you set this you must set a will message
@@ -205,7 +214,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
     /// Ok, lets try a subscription
     print('EXAMPLE::Subscribing to the $this.topic topic');
     // const String topic = 'test/lol';Not a wildcard topic
-    client.subscribe('topic/metric', MqttQos.atMostOnce);
+    client.subscribe('topic/${this.stateTopic}', MqttQos.atMostOnce);
 
     /// The client has a change notifier object(see the Observable class) which we then listen to to get
     /// notifications of published updates to each subscribed topic.
@@ -245,7 +254,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
   Future<int> disconnect() async {
     /// Finally, unsubscribe and exit gracefully
     print('EXAMPLE::Unsubscribing');
-    client.unsubscribe('topic/metric');
+    client.unsubscribe('topic/${this.stateTopic}');
 
     /// Wait for the unsubscribe message from the broker if you wish.
     await MqttUtilities.asyncSleep(2);

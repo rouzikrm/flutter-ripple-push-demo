@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Reactive Montioring Dashboard',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Reactive Monitoring Dashboard'),
     );
   }
 }
@@ -59,39 +59,130 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Card(child:
-              RippleNotificationCard(
-                color:Colors.amber,containerWidth:100.0, containerHeight:100.0,
-                cardBody:<Widget>[
-                  // RippleNotificationCard(color:Colors.redAccent,containerWidth:100.0, containerHeight:100.0,cardBody:<Widget>[Spacer()],ripplePower: 3.0)
-                  Spacer()
-                ],
-                ripplePower: 3.0,eventType: "o",)
-            )
-          ],
-        ),
+      body: Container(
+        child: _buildContent(),
       ),
       
     );
   }
+
+  Widget _buildContent(){
+    return _centeredLayout(
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                _buildBox(points: 1,eventType:"aa", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ab", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ac", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ad", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ae", color: Colors.indigo),
+                
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                _buildBox(points: 1,eventType:"ba", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"bb", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"bc", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"be", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"bf", color: Colors.indigo),
+                
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                _buildBox(points: 1,eventType:"ca", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"cb", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"cd", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"ce", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"cf", color: Colors.indigo),
+                
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                _buildBox(points: 1,eventType:"da", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"db", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"dc", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"dd", color: Colors.indigo),
+                _buildBox(points: 1,eventType:"df", color: Colors.indigo),
+                
+              ],
+            ),
+          ),
+        ],
+      )
+    );
+  }
+
+
+  Widget _buildBox({int points, Color color,String eventType, Color textColor = Colors.white}) {
+    return Expanded(
+      flex: points,
+      child: Container(
+        constraints: BoxConstraints.expand(),
+        //color: color,
+        child: Center( child:
+          Card(child:
+              RippleNotificationCard(
+                topic:eventType,color:color,containerWidth:points * 100.0, containerHeight:100.0,
+                cardBody:<Widget>[
+                  Spacer()
+                ],
+                ripplePower: 3.0,eventType: eventType,)
+            )
+          ,
+        ),
+      ),
+    );
+  }
+
+  Size _goldenRatio(BoxConstraints constraints) {
+    double ratio = 13.0 / 8.0;
+    if (constraints.maxHeight / constraints.maxWidth > ratio) {
+      double height = constraints.maxWidth * ratio;
+      return Size(constraints.maxWidth, height);
+    } else {
+      double width = constraints.maxHeight / ratio;
+      return Size(width, constraints.maxHeight);
+    }
+  }
+
+  Widget _centeredLayout({Widget child}) {
+    return LayoutBuilder(builder: (content, constraints) {
+      Size size = _goldenRatio(constraints);
+      return Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: size.width,
+            maxHeight: size.height,
+          ),
+          child: child,
+        ),
+      );
+    });
+  }
+
+  /*
+     Card(child:
+              RippleNotificationCard(
+                color:Colors.amber,containerWidth:100.0, containerHeight:100.0,
+                cardBody:<Widget>[
+                  Spacer()
+                ],
+                ripplePower: 3.0,eventType: "o",)
+            )
+   */
 }
