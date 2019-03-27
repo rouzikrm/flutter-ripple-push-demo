@@ -53,7 +53,7 @@ class _RippleNotificationCardState extends State<RippleNotificationCard>
       List<Widget> stateCardBody,
       double stateRipplePower,
       String stateEventType})
-      : client = MqttClient('192.168.1.2', ''),
+      : client = MqttClient('172.16.143.84', ''),
         this.stateSticky = stateSticky,
         this.stateTopic = stateTopic,
         this.stateColor = stateColor,

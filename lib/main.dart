@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         child: Center( child:
               RippleNotificationCard(
-                sticky:true,topic:eventType,color:color,containerWidth:points * 100.0, containerHeight:100.0,
+                sticky:false,topic:eventType,color:color,containerWidth:points * 100.0, containerHeight:100.0,
                 cardBody:<Widget>[
                   Spacer()
                 ],
@@ -157,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ,
         ),
-    );
+    ); 
   }
 
   Size _goldenRatio(BoxConstraints constraints) {

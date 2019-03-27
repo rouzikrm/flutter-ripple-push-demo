@@ -124,3 +124,7 @@ mosquitto_pub -t topic/eb -m '{"type":"eb","color":"FFFFFFFF","iv":"75"}'
 mosquitto_pub -t topic/ec -m '{"type":"ec","color":"FFFFFFFF","iv":"75"}'
 mosquitto_pub -t topic/ed -m '{"type":"ed","color":"FFFFFFFF","iv":"75"}'
 mosquitto_pub -t topic/ee -m '{"type":"ee","color":"FFFFFFFF","iv":"75"}'
+
+
+mosquitto_pub -t topic/aa -m '{"type":"aa","color":"FFFFaa41","iv":"125"}'
+mosquitto_pub -t topic/aa -m '{"type":"aa","color":"FFFFaa41","iv":"125"}'
